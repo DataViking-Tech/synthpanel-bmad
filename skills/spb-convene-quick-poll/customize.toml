@@ -1,0 +1,45 @@
+# spb-convene-quick-poll — workflow customization surface
+#
+# Layered base → team → user merge per BMad convention:
+#   - base:     this file
+#   - team:     {project-root}/_bmad/custom/spb-convene-quick-poll.toml
+#   - personal: {project-root}/_bmad/custom/spb-convene-quick-poll.user.toml
+#
+# Merge rules:
+#   scalars: override wins • arrays: append • arrays-of-tables (code/id keyed): replace then append.
+#
+# Resolve via {project-root}/_bmad/scripts/resolve_customization.py.
+
+[workflow]
+
+# --- Activation hooks --------------------------------------------------------
+activation_steps_prepend = []
+activation_steps_append = []
+
+# --- Persistent facts (loaded every run) ------------------------------------
+# Quinn's facilitator skill already loads the v1.0.0 contract; workflow-level
+# entries here append on top. Override-team can add org-specific reminders.
+persistent_facts = [
+  "file:{project-root}/sp-v1-0-0-contract/spec.md",
+]
+
+# --- QP-specific defaults (DESIGN-3 §3 overlay) -----------------------------
+
+# Default panel size when the user doesn't specify. QP class floor 5, ceiling 10.
+default_size = 8
+allowed_size_range = [5, 10]
+
+# Pack defaults. Empty = pick per-decision per audience-matching rules.
+default_pack = ""
+panel_template = ""
+
+# Readback shape — QP must lede the limit before the headline.
+readback_lede_template = "Quick-poll (n={size}, pack={pack_id}) — not ship-blocking. {headline}"
+small_n_floor_class = "qp"
+
+# --- Output paths (DESIGN-3 §2 cross-cutting) -------------------------------
+verdict_output_path = "{project-root}/_bmad/synthpanel/verdicts/{run_id}.json"
+readback_card_path = "{project-root}/_bmad/synthpanel/cards/{run_id}.md"
+
+# Optional shell hook fired after Stage 7 completes. Empty = no hook.
+on_complete = ""
