@@ -1,5 +1,6 @@
 module,skill,display-name,menu-code,description,action,args,phase,after,before,required,output-location,outputs
-SynthPanel,_meta,,,,,,,,,false,https://github.com/synthpanel/synthpanel-bmad#readme,
+synthpanel,spb-setup,Setup SynthPanel Module,SP,"Install or update SynthPanel module config and help entries.",configure,"{-H: headless mode}|{inline values: skip prompts with provided values}",anytime,,,false,{project-root}/_bmad,config.yaml and config.user.yaml
+synthpanel,bmad-agent-facilitator,Panel Facilitator,PF,"Quinn — coaches the decision frame, picks panel size and persona pack, reads the verdict back honestly with flags and dissent.",activate,,anytime,,,false,,facilitation session
 synthpanel,spb-convene-quick-poll,Quick Poll,QP,Fast 5–10-persona signal on a low-stakes choice (copy/naming/shortlist),run_quick_poll,decision_being_informed,anytime,,,true,verdict_output_path,verdict-card
 synthpanel,spb-convene-panel,Convene Panel,RP,Standard 12–20-persona structured deliberation on a hard-to-reverse decision,run_panel,decision_being_informed,anytime,,,true,verdict_output_path,verdict-card
 synthpanel,spb-extend-panel,Extend Panel,EP,Follow-up question on an existing panel run; persona continuity preserved,extend_panel,prior_run_id|follow_up_question,anytime,spb-convene-panel:run_panel,,true,verdict_output_path,verdict-card

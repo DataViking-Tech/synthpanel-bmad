@@ -1,0 +1,95 @@
+# bmad-agent-facilitator (Quinn) — customization surface
+#
+# Layered base → team → user merge per BMad convention:
+#   - base:     this file
+#   - team:     {project-root}/_bmad/custom/bmad-agent-facilitator.toml
+#   - personal: {project-root}/_bmad/custom/bmad-agent-facilitator.user.toml
+#
+# Layer values via {project-root}/_bmad/scripts/resolve_customization.py.
+
+# --- Activation hooks --------------------------------------------------------
+
+# Prepended to Quinn's "On Activation" steps. Use for org-specific intros,
+# pack pre-selection, or boot-time announcements.
+activation_steps_prepend = []
+
+# Appended after the standard activation. Use for org-specific reminders
+# (e.g. "use the v2 pricing pack until launch") or to surface a default decision.
+activation_steps_append = []
+
+# --- Persistent facts (loaded every session) --------------------------------
+
+# Files Quinn loads on activation. Missing files are noted once and skipped.
+# Defaults reference the SynthPanel v1.0.0 contract (DESIGN-2 §11).
+persistent_facts = [
+  "file:{project-root}/sp-v1-0-0-contract/spec.md",
+  "file:{project-root}/sp-v1-0-0-contract/launch-plan.md",
+]
+
+# --- Principles (Quinn's operating constitution) ----------------------------
+
+# Override or extend the inline principles in SKILL.md. The full list is the
+# union of these and the SKILL.md defaults — use this surface to add org-
+# specific principles without forking.
+principles = [
+  "Verdict ownership stays with the user; the panel informs, doesn't decide.",
+  "Dissent before convergence — every readback names disagreement first.",
+  "The decision frame is part of the verdict. No frame, no panel.",
+  "Inspectability over polish: never hide flags, never paraphrase verbatims.",
+  "Match the panel to the audience, not to the asker.",
+  "Synthetic-population estimate ≠ ground truth — call the limit every time.",
+]
+
+# --- Panel pack defaults ----------------------------------------------------
+
+# If non-empty, Quinn uses this pack id by default at Stage 3 of any
+# convene-* workflow. Empty means Quinn picks per-decision per the audience-
+# matching rules in SKILL.md and references/sizing-and-packs.md.
+default_pack = ""
+
+# Optional path to a panelists.yaml override (per DESIGN-3 §2 cross-cutting).
+# Empty means Quinn defers to whatever the convene-* workflow's customize.toml
+# specifies, then to server defaults.
+panel_template = ""
+
+# --- Sizing defaults ---------------------------------------------------------
+
+# Per-decision-class default size. Quinn may override based on decision shape.
+default_quick_poll_size = 8
+default_panel_size = 16
+
+# small_n floor mapping per decision class. Used at convene time to surface
+# the floor BEFORE the panel runs (DESIGN-2 §7), not as a surprise flag.
+[small_n_floors]
+copy_naming = 5
+pricing = 12
+positioning = 12
+hiring = 18
+policy = 14
+strategic = 18
+
+# --- Trigger behavior --------------------------------------------------------
+
+# Threshold: if Quinn is unsure whether a moment is a trigger, offer at most
+# this many times per decision class per session. After that, stop offering.
+max_offers_per_decision_class = 1
+
+# When true, Quinn confirms before convening on direct invocation
+# ("how would users react?"). When false, Quinn convenes silently with the
+# frame echoed for transparency. (DESIGN-4 §5 calibration item.)
+confirm_before_direct_invoke = true
+
+# --- Readback behavior -------------------------------------------------------
+
+# When convergence < this threshold, Quinn appends a soft suggestion to extend
+# the panel on the cleavage. Set 0.0 to disable. (DESIGN-3 §4 RP overlay.)
+extend_suggestion_threshold = 0.45
+
+# When true, Quinn writes the rendered card to disk in addition to printing it.
+# Path comes from the consuming workflow's `readback_card_path`.
+write_card_to_disk = true
+
+# --- Output paths (read from spb-setup, not overridden here) ----------------
+# verdict_output_path and readback_card_path are owned by spb-setup and the
+# convene-* workflow customize.tomls. Quinn reads them at runtime; do not
+# duplicate here.

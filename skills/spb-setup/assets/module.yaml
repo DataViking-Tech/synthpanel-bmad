@@ -31,5 +31,5 @@ agents:
   - code: fac
     name: ""
     title: "Panel Facilitator"
-    icon: "🎙️"
+    icon: "🪧"
     description: "Quinn — coaches you on decision frame, panel size, and persona pack selection; reads the verdict back honestly with flags and dissent."
