@@ -1,19 +1,43 @@
 ---
 name: spb-extend-panel
+type: mcp-tool-wrapper
 description: Extends a prior SynthPanel run with a follow-up question; persona continuity preserved via the extend_panel MCP tool. Use when the user says 'extend that panel', 'follow up with the same panel', 'ask the panel one more thing', or 'press the panel on the dissent'.
+mcp:
+  server: synthpanel
+  tool: extend_panel
+  schema_version: 1.0.0
+inputSchema:
+  type: object
+  required:
+    - prior_run_id
+    - follow_up_question
+  additionalProperties: false
+  properties:
+    prior_run_id:
+      type: string
+      description: Run ID of the panel to extend. Resolves locally to verdicts/{run_id}.json and to a server-side full_transcript_uri for persona-realization replay.
+    follow_up_question:
+      type: string
+      minLength: 12
+      maxLength: 280
+      description: Single-line UTF-8 follow-up. NOT a fresh decision_being_informed — the original frame is inherited from the prior run.
+    additional_size:
+      type: integer
+      minimum: 0
+      maximum: 12
+      default: 0
+      description: Personas to add beyond the prior panel. Default 0 re-polls the same realized panel.
+sha256: 0d72d505302db8eecde6fe5d6e800b3ce75fa2a7076e641d796a3790b658f482
 ---
 
 # Extend Panel
 
-> **Status:** stub. Filled in by IMPL-4 (`spb-impl-4`).
->
-> Workflow shape and stages canonical in `design-notes/workflows.md` §5 (DESIGN-3).
-
 Follow-up workflow on an existing `panel_verdict.json`. Wraps the SynthPanel
 MCP tool `extend_panel`, preserving persona realization from the prior run.
-Default `additional_size=0` (re-poll same panel with new question), range 0–12.
+Default `additional_size=0` (re-poll same panel with new question), range
+0–12. Workflow shape canonical in `design-notes/workflows.md` §5.
 
-Stages (per workflows.md §5):
+## Stages
 
 | # | Stage | Prompt |
 |---|---|---|
@@ -29,11 +53,25 @@ Stages (per workflows.md §5):
 If the user is reframing the original question, route to `spb-convene-panel`
 instead — extension preserves persona continuity, reframing breaks it.
 
-`customize.toml` overlays EP-specific scalars (`default_additional_size`,
-`allowed_additional_size_range`, `readback_show_diff_vs_parent`).
+## MCP tool contract
 
-> **Open clarification (workflows.md §2):** spec §1 lists `extend_panel` in
-> the "Lives on" row for `decision_being_informed`. This workflow treats it
-> as **inherited from the prior run, not re-supplied**. If the server actually
-> requires a fresh value, Stage 4 echoes the prior verdict's
-> `meta.decision_being_informed` verbatim.
+Stage 4 constructs the request body strictly per spec §1 against the
+`inputSchema` in this skill's frontmatter. `decision_being_informed` is
+**not** a request field for `extend_panel` — it is inherited from the prior
+run via the resolved transcript URI (workflows.md §2 open clarification).
+
+Response envelope is validated per spec §2; the orphan-extension case
+(prior_run_id resolves locally but server reports unknown run) is surfaced
+explicitly per workflows.md §5 — persona continuity is no longer guaranteed,
+user opts into either re-`spb-convene-panel` or a re-realized panel stamped
+with a warning in the readback.
+
+## Customization
+
+`customize.toml` overlays EP-specific scalars:
+
+```toml
+default_additional_size = 0
+allowed_additional_size_range = [0, 12]
+readback_show_diff_vs_parent = true
+```
