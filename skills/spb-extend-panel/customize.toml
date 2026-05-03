@@ -1,0 +1,46 @@
+# spb-extend-panel — workflow customization surface
+#
+# Layered base → team → user merge per BMad convention:
+#   - base:     this file
+#   - team:     {project-root}/_bmad/custom/spb-extend-panel.toml
+#   - personal: {project-root}/_bmad/custom/spb-extend-panel.user.toml
+#
+# Merge rules:
+#   scalars: override wins • arrays: append • arrays-of-tables (code/id keyed): replace then append.
+#
+# Resolve via {project-root}/_bmad/scripts/resolve_customization.py.
+
+[workflow]
+
+# --- Activation hooks --------------------------------------------------------
+activation_steps_prepend = []
+activation_steps_append = []
+
+# --- Persistent facts (loaded every run) ------------------------------------
+persistent_facts = [
+  "file:{project-root}/sp-v1-0-0-contract/spec.md",
+]
+
+# --- EP-specific defaults (DESIGN-3 §5 overlay) -----------------------------
+
+# Default extra personas to add beyond the prior panel. 0 re-polls the
+# already-realized panel with the new question (preserves continuity).
+default_additional_size = 0
+allowed_additional_size_range = [0, 12]
+
+# When true, Stage 7 readback diffs convergence/dissent vs the parent run.
+readback_show_diff_vs_parent = true
+
+# Persona / pack inheritance — extending with a different pack defeats the
+# purpose. Override only when the team has an audited reason.
+inherit_pack_from_parent = true
+inherit_quotas_from_parent = true
+
+# --- Output paths (lineage-aware) -------------------------------------------
+# {n} is incremented per extension off the same parent run_id.
+verdict_output_path = "{project-root}/_bmad/synthpanel/verdicts/{run_id}-ext-{n}.json"
+readback_card_path = "{project-root}/_bmad/synthpanel/cards/{run_id}-ext-{n}.md"
+extension_index_path = "{project-root}/_bmad/synthpanel/verdicts/index.json"
+
+# Optional shell hook fired after Stage 7 completes.
+on_complete = ""
