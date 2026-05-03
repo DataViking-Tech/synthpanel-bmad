@@ -1,0 +1,35 @@
+code: spb
+name: "SynthPanel"
+description: "Synthetic deliberation panels — convene 5–40 persona panels for structured signal on hard-to-reverse product decisions, via the SynthPanel MCP server."
+module_version: 0.1.0
+default_selected: false
+schema_version: ">=1.0.0,<2.0.0"
+module_greeting: >
+  SynthPanel is ready. I'm Quinn, your panel facilitator. I help you decide
+  *whether* to convene a panel, frame the decision tightly, pick the right pack
+  and size, then read the verdict back honestly — flags and all. Try
+  `convene-panel`, `convene-quick-poll`, `extend-panel`, or `render-readback`,
+  or just describe the decision you're stuck on.
+
+verdict_output_path:
+  prompt: "Where should panel verdict JSON files be saved?"
+  default: "{project-root}/_bmad/synthpanel/verdicts"
+  result: "{value}"
+
+readback_card_path:
+  prompt: "Where should rendered verdict cards (markdown) be saved?"
+  default: "{project-root}/_bmad/synthpanel/cards"
+  result: "{value}"
+
+mcp_server_url:
+  prompt: "SynthPanel MCP server URL (leave default if using a local stdio server)"
+  default: "stdio"
+  result: "{value}"
+  user_setting: false
+
+agents:
+  - code: fac
+    name: ""
+    title: "Panel Facilitator"
+    icon: "🎙️"
+    description: "Quinn — coaches you on decision frame, panel size, and persona pack selection; reads the verdict back honestly with flags and dissent."

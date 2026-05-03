@@ -1,0 +1,29 @@
+{
+  "name": "synthpanel-bmad",
+  "owner": {
+    "name": "SynthPanel"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/synthpanel/synthpanel-bmad",
+  "repository": "https://github.com/synthpanel/synthpanel-bmad",
+  "keywords": ["bmad", "synthpanel", "deliberation", "panel", "facilitator", "decision-support"],
+  "plugins": [
+    {
+      "name": "synthpanel-bmad",
+      "source": "./",
+      "description": "SynthPanel — Synthetic Deliberation Panels. A BMad expansion pack: Quinn (the Panel Facilitator agent) plus convene/extend/render workflows that wrap the SynthPanel MCP tools (run_panel, run_quick_poll, extend_panel) for structured multi-persona deliberation on hard-to-reverse product decisions. Pre-1.0 — breaking changes possible until 1.0.0.",
+      "version": "0.1.0",
+      "author": {
+        "name": "SynthPanel"
+      },
+      "skills": [
+        "./skills/spb-setup",
+        "./skills/bmad-agent-facilitator",
+        "./skills/spb-convene-quick-poll",
+        "./skills/spb-convene-panel",
+        "./skills/spb-extend-panel",
+        "./skills/spb-render-readback"
+      ]
+    }
+  ]
+}
